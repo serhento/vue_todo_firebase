@@ -8,7 +8,13 @@
             <span>Новая задача</span>
         </div>
         <div v-if="!formToggle" class="tasks__items--form--block">
-            <input v-model="taskName" class="field" type="text" placeholder="Название задачи">
+            <input
+                    v-model="taskName"
+                    class="field"
+                    type="text"
+                    placeholder="Название задачи"
+                    @keydown.enter="setTaskToList"
+            >
             <button @click="setTaskToList" class="button">Добавить задачу</button>
             <button @click="resetForm" class="button button--grey">Отмена</button>
         </div>

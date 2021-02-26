@@ -14,7 +14,7 @@ let store = new Vuex.Store({
         GET_LISTS_FROM_API({commit}){
             return listsRef.get().then(function(lists) {
                 commit('SET_LISTS_TO_STATE', lists.val());
-                console.log(lists.val());
+                //console.log(lists.val());
                 return lists.val()
             })
                 .catch((error)=>{
@@ -45,7 +45,7 @@ let store = new Vuex.Store({
         GET_COLORS_FROM_API({commit}){
             return colorsRef.get().then(function(colors) {
                 commit('SET_COLORS_TO_STATE', colors.val());
-                console.log(colors.val());
+                //console.log(colors.val());
                 return colors.val()
             })
                 .catch((error)=>{
