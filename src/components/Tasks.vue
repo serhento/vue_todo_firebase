@@ -22,7 +22,7 @@
                     </div>
                     <div class="tasks__items-row-tools">
                         <img @click="editTaskName(SELECTED_TASK, task.text, index)" src="@/assets/img/edit.svg" alt="">
-                        <img @click="deleteTask(SELECTED_TASK, index)" src="@/assets/img/remove.svg" alt="">
+                        <img @click="deleteTask(SELECTED_TASK, index, Object.values(LISTS[SELECTED_TASK].tasks).length)" src="@/assets/img/remove.svg" alt="">
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 :listId="this.LISTS[SELECTED_TASK].id"
             />
         </div>
-        <p id="prolog" v-if="LISTS[SELECTED_TASK].img">
+        <p id="prolog" v-if="LISTS[SELECTED_TASK] ? LISTS[SELECTED_TASK].img : 0">
             На просторах youtube есть урок по созданию этого приложения с помощью библиотеки React JS.
             Я взял этот урок, как образец, и написал приложение с помощью фреймворка Vue JS. Стили практически не менял,
             т.к для меня, в первую очередь, было важным продемонстрировать навыки работы с Vue JS.
@@ -82,13 +82,13 @@
             editTaskName(listsIndex, text, tasksIndex){
                 const newTitle = window.prompt('Название задачи', text);
                 if (newTitle){
-                    const newData = {"text": newTitle, "listsIndex": listsIndex, "tasksIndex": tasksIndex}
+                    const newData = {"text": newTitle, "listsIndex": listsIndex, "tasksIndex": tasksIndex};
                     this.EDIT_TASK_NAME(newData)
                 }
             },
-            deleteTask(listsIndex, tasksIndex){
+            deleteTask(listsIndex, tasksIndex, length){
                 if (window.confirm('Вы действительно хотите удалить задачу?')){
-                    const newData = {"listsIndex": listsIndex, "tasksIndex": tasksIndex};
+                    const newData = {"listsIndex": listsIndex, "tasksIndex": tasksIndex, "tasksLength": length};
                     this.DELETE_TASK_FROM_TASKS(newData);
                     setTimeout(this.GET_LISTS_FROM_API, 100);
                 }

@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 let store = new Vuex.Store({
     state: {
-        lists: [],
+        lists: {},
         colors: [],
         selectedTask: 0
     },
@@ -14,7 +14,6 @@ let store = new Vuex.Store({
         GET_LISTS_FROM_API({commit}){
             return listsRef.get().then(function(lists) {
                 commit('SET_LISTS_TO_STATE', lists.val());
-                //console.log(lists.val());
                 return lists.val()
             })
                 .catch((error)=>{
@@ -33,10 +32,8 @@ let store = new Vuex.Store({
                 })
         },
         DELETE_LIST_FROM_LISTS({commit}, index){
+            commit('DELETE_LIST_FROM_STATE',index);
             listsRef.child(index).remove()
-                .then(()=>{
-                    commit('DELETE_LIST_FROM_STATE',index);
-                })
                 .catch((error)=>{
                     console.log(error);
                     return error
@@ -45,7 +42,6 @@ let store = new Vuex.Store({
         GET_COLORS_FROM_API({commit}){
             return colorsRef.get().then(function(colors) {
                 commit('SET_COLORS_TO_STATE', colors.val());
-                //console.log(colors.val());
                 return colors.val()
             })
                 .catch((error)=>{
@@ -75,14 +71,25 @@ let store = new Vuex.Store({
                 })
         },
         DELETE_TASK_FROM_TASKS({commit}, data){
-            listsRef.child(data.listsIndex).child('tasks').child(data.tasksIndex).remove()
-                .then(()=>{
-                    commit('DELETE_TASK_FROM_STATE',data);
-                })
-                .catch((error)=>{
-                    console.log(error);
-                    return error
-                })
+            if (data.tasksLength > 1){
+                listsRef.child(data.listsIndex).child('tasks').child(data.tasksIndex).remove()
+                    .then(()=>{
+                        commit('DELETE_TASK_FROM_STATE',data);
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                        return error
+                    })
+            }else{
+                listsRef.child(data.listsIndex).update({'tasks': 0})
+                    .then(()=>{
+                        commit('DELETE_TASK_FROM_STATE',data);
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                        return error
+                    });
+            }
         },
         ON_TASK_COMPLETED({commit}, data){
             listsRef.child(data.listsIndex).child('tasks').child(data.tasksIndex).update({"completed": !data.completed})
